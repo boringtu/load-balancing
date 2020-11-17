@@ -52,7 +52,7 @@ npm run test
 
 源码：`addServer 函数`
 
-6. 动态移除服务器函数
+6. 动态移除服务器函数（功能未实现，请忽略）
 
 源码：`removeServer 函数`
 
