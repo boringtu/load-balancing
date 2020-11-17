@@ -4,8 +4,14 @@
   "description": "线程安全的动态加权平滑负载均衡算法",
   "main": "main.coffee",
   "scripts": {
-    "test": "coffee main"
+    "testa": "coffee main.coffee",
+    "test": "mocha --require coffeescript/register test.coffee"
   },
   "author": "BoringTu",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "coffeescript": "^2.5.1",
+    "mocha": "^8.2.1"
+  }
 }
