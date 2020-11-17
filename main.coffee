@@ -63,6 +63,7 @@ global.addServer = (server) ->
 	serverPool.push server
 	console.log "Add Server: #{ server.name }  Default Weight: #{ server.defaultWeight }"
 
+### 移除服务器的逻辑暂不考虑
 # 移除服务器（动态）
 global.removeServer = (server) ->
 	i = serverPool.findIndex (item) => item is server
@@ -73,9 +74,10 @@ global.removeServer = (server) ->
 	totalWeight -= defaultWeight
 	# remove the server from serverPool
 	serverPool.splice i, 1
-	console.log "Remove Server: #{ server.name }"
+	console.log "Remove Server: #{ server.name }  Default Weight: #{ server.defaultWeight }"
+###
 
-# 选择服务器
+# 选择服务器（负载均衡控制器）
 global.chooseServer = ->
 	# 当前最高权重值
 	maxWeight = 0
