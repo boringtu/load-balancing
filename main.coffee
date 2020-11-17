@@ -2,10 +2,13 @@
 global.serverNameLength = 3
 # 请求ID长度
 global.reqIDLength = 5
+
 # 服务器ID（自增长，起始值：1
 global._serverID = 0
 # 请求ID（自增长，起始值：1
 global._reqID = 0
+# 请求日志
+global.logs = []
 
 # 总权重
 global.totalWeight = 0
@@ -25,24 +28,23 @@ class global.Server
 		@count = 0
 		# 权重
 		@weight = @defaultWeight
-		#console.log @weight
 		# 服务器名称
 		name = @id.toString()
 		name = '0' + name for n in [...new Array(serverNameLength - name.length).keys()]
 		@name = name
-		#console.log "Server: #{ @name }	默认权重: #{ @defaultWeight }"
 	execute: ->
 		# 计算所有服务器的权重
 		@_calcWeights()
 		# 并发量 +1
 		++@count
-		console.log "Req: #{ formatReqID(_reqID) }  Server: #{ @name }  Default Weight: #{ @defaultWeight }	Current Weight: #{ @weight }"
+		str = "Req: #{ formatReqID(_reqID) }  Server: #{ @name }  Default: #{ @defaultWeight }	Current: #{ @weight }	Total: #{ totalWeight }"
+		console.log str
+		global.logs.push str
 		# 模拟执行过程消耗的时间（20 ~ 200ms
 		ms = 20 + Math.floor Math.random() * 180
 		await sleep ms
 		# 并发量 -1
 		--@count
-		#console.log 'finished'
 	## 内部函数
 	# 计算所有服务器的权重
 	_calcWeights: =>
@@ -72,7 +74,6 @@ global.removeServer = (server) ->
 	# remove the server from serverPool
 	serverPool.splice i, 1
 	console.log "Remove Server: #{ server.name }"
-	# TODO 
 
 # 选择服务器
 global.chooseServer = ->
@@ -97,8 +98,8 @@ global.chooseServer = ->
 	for server in tempBox1
 		rate = server.count / server.defaultWeight
 		continue if rate > minRate
-		if rage < minRate
-			minRate = rage
+		if rate < minRate
+			minRate = rate
 			tempBox2 = []
 		tempBox2.push server
 	return tempBox2[0] if tempBox2.length is 1
@@ -111,30 +112,3 @@ global.execute = ->
 	++_reqID
 	server = chooseServer()
 	server.execute()
-
-######### TEST CODE #########
-
-## 默认创建 2 个服务器
-#console.group '创建默认服务器'
-#for n in [...new Array(2).keys()]
-#	#defaultWeight = 1 + Math.floor Math.random() * 9
-#	defaultWeight = (n + 1) * 2
-#	addServer new Server ++_serverID, defaultWeight
-#console.groupEnd()
-#
-## 请求测试
-#console.group '请求开始'
-#execute() for n in [...new Array(12).keys()]
-#console.groupEnd()
-
-#say = (text) ->
-#	console.log text
-#
-#countdown = (seconds) ->
-#	for i in [seconds..1]
-#		say i
-#		await sleep 1000 # wait one second
-#	say "Blastoff!"
-#
-##countdown 3
-
